@@ -1,0 +1,66 @@
+INÍCIO
+    // Receber tamanho da matriz
+    matriz_tamanho ← LER_INTEIRO("Digite o tamanho da matriz: ")
+
+    // Função para obter posição inicial válida do robô
+    FUNÇÃO obter_posicao_valida_robô(matriz_tamanho)
+        ENQUANTO VERDADEIRO
+            linha ← LER_INTEIRO("Digite a posição inicial do robô (linha): ")
+            coluna ← LER_INTEIRO("Digite a posição inicial do robô (coluna): ")
+            SE linha >= 0 E linha < matriz_tamanho E coluna >= 0 E coluna < matriz_tamanho ENTÃO
+                RETORNAR (linha, coluna)
+            SENÃO
+                IMPRIMIR "Posição inválida! Insira valores entre 0 e ", matriz_tamanho - 1
+        FIM_ENQUANTO
+    FIM_FUNÇÃO
+
+    // Obter posição inicial do robô
+    posicao_inicial_robô ← obter_posicao_valida_robô(matriz_tamanho)
+
+    // Função para mover o robô
+    FUNÇÃO mover_robô(matriz_tamanho, posicao_inicial)
+        // Definir direções: direita, baixo, esquerda, cima
+        direcoes ← [
+            (0, 1, "direita"),
+            (1, 0, "baixo"),
+            (0, -1, "esquerda"),
+            (-1, 0, "cima")
+        ]
+        posicao ← posicao_inicial
+        paredes_encontradas ← LISTA_VAZIA
+        posicoes_visitadas ← CONJUNTO_VAZIO
+        ADICIONAR posicao a posicoes_visitadas
+
+        PARA CADA (delta_linha, delta_coluna, nome_direcao) EM direcoes FAÇA
+            IMPRIMIR "Movendo para ", nome_direcao
+            ENQUANTO VERDADEIRO
+                proxima_linha ← posicao[0] + delta_linha
+                proxima_coluna ← posicao[1] + delta_coluna
+                SE proxima_linha >= 0 E proxima_linha < matriz_tamanho E 
+                   proxima_coluna >= 0 E proxima_coluna < matriz_tamanho ENTÃO
+                    posicao ← (proxima_linha, proxima_coluna)
+                    ADICIONAR posicao a posicoes_visitadas
+                    IMPRIMIR "Robô na posição: (", posicao[0], ", ", posicao[1], ")"
+                SENÃO
+                    IMPRIMIR "Bateu na parede aohimself2
+
+System: parede movendo ", nome_direcao, " em (", posicao[0], ", ", posicao[1], ")! Indo para a próxima direção."
+                    ADICIONAR (nome_direcao, posicao) a paredes_encontradas
+                    SAIR_DO_ENQUANTO
+                FIM_SE
+            FIM_ENQUANTO
+        FIM_PARA
+
+        // Imprimir matriz com posições visitadas
+        IMPRIMIR_MATRIZ(matriz_tamanho, posicao, posicoes_visitadas)
+        
+        // Resumo das paredes encontradas
+        IMPRIMIR "Robô encontrou todas as 4 paredes."
+        PARA CADA (direcao, coordenada) EM paredes_encontradas FAÇA
+            IMPRIMIR "Antes de bater na parede ", direcao, ", o robô estava em: ", coordenada
+        FIM_PARA
+    FIM_FUNÇÃO
+
+    // Executar movimento do robô
+    mover_robô(matriz_tamanho, posicao_inicial_robô)
+FIM
