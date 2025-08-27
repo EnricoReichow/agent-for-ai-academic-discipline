@@ -1,0 +1,84 @@
+CONSTANTES:
+    TAMANHO_GRADE ← 10
+    DIREÇÕES ← [(0,1), (1,0), (0,-1), (-1,0)]
+    OBSTÁCULOS_DEFINIDOS ← {
+        (0,5), (1,4), (1,7), (2,3), (3,3), (4,3), (4,6),
+        (5,8), (6,4), (7,3), (7,5), (7,6), (8,6), (9,5)
+    }
+
+FUNÇÃO ENCONTRAR_CAMINHO_BFS(início, objetivo, obstáculos):
+    SE início = objetivo ENTÃO
+        RETORNAR [início]
+    Fila ← nova fila com [início]
+    Predecessores ← {início: NULO}
+    ENQUANTO Fila não estiver vazia:
+        Nó_atual ← remover primeiro da Fila
+        SE Nó_atual = objetivo ENTÃO
+            Caminho ← []
+            ENQUANTO Nó_atual ≠ NULO:
+                adicionar Nó_atual a Caminho
+                Nó_atual ← Predecessores[Nó_atual]
+            inverter Caminho
+            RETORNAR Caminho
+        PARA cada (dx, dy) em DIREÇÕES:
+            Vizinho ← (Nó_atual.x + dx, Nó_atual.y + dy)
+            SE Vizinho está dentro da grade E não está em obstáculos E não está em Predecessores ENTÃO
+                Predecessores[Vizinho] ← Nó_atual
+                adicionar Vizinho à Fila
+    RETORNAR NULO
+
+FUNÇÃO ANIMAR_CAMINHO(caminho, início, objetivo, obstáculos):
+    criar figura da grade
+    Caminho_Visitado ← conjunto vazio
+    PARA cada posição em caminho:
+        adicionar posição a Caminho_Visitado
+        grade ← matriz de zeros do tamanho TAMANHO_GRADE
+        PARA cada obstáculo em obstáculos:
+            grade[obstáculo] ← 1
+        PARA cada pos em Caminho_Visitado:
+            grade[pos] ← 4
+        grade[início] ← 3
+        grade[objetivo] ← 2
+        grade[posição atual] ← 5
+        exibir grade com cores e pausa de 0.4s
+        limpar visualização
+    grade_final ← matriz de zeros
+    PARA cada obstáculo em obstáculos:
+        grade_final[obstáculo] ← 1
+    PARA cada pos em caminho:
+        grade_final[pos] ← 4
+    grade_final[início] ← 3
+    grade_final[objetivo] ← 2
+    exibir grade final e aguardar fechamento da janela
+
+FUNÇÃO EXECUTAR_FASE(com_obstaculos):
+    SE com_obstaculos = VERDADEIRO ENTÃO
+        exibir "Fase com obstáculos"
+        obstáculos ← OBSTÁCULOS_DEFINIDOS
+    SENÃO
+        exibir "Fase sem obstáculos"
+        obstáculos ← conjunto vazio
+    REPETIR:
+        início ← posição aleatória
+        objetivo ← posição aleatória
+    ATÉ início ≠ objetivo E início ∉ obstáculos E objetivo ∉ obstáculos
+    exibir "Objetivo: do início ao objetivo"
+    caminho ← ENCONTRAR_CAMINHO_BFS(início, objetivo, obstáculos)
+    SE caminho ≠ NULO ENTÃO
+        exibir "Caminho encontrado"
+        sucesso ← "Sim"
+        tamanho ← comprimento de caminho - 1
+        exibir métricas de sucesso e tamanho
+        exibir "Iniciando animação..."
+        ANIMAR_CAMINHO(caminho, início, objetivo, obstáculos)
+        exibir "Animação finalizada"
+    SENÃO
+        exibir "Caminho não encontrado"
+        sucesso ← "Não"
+        tamanho ← "N/A"
+        exibir métricas de falha
+
+INÍCIO DO PROGRAMA:
+    EXECUTAR_FASE(com_obstaculos = FALSO)
+    exibir linha separadora
+    EXECUTAR_FASE(com_obstaculos = VERDADEIRO)
